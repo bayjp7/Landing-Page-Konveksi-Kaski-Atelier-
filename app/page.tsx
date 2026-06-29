@@ -1,65 +1,119 @@
-import Image from "next/image";
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen">
+      
+      {/* 1. NAVBAR */}
+      <nav className="border-b border-stone-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+          <span className="text-xl font-serif font-bold tracking-widest text-stone-800">
+            KASKI ATELIER
+          </span>
+          <div className="hidden md:flex space-x-8 text-sm font-medium text-stone-600">
+            <a href="#tentang" className="hover:text-stone-900 transition">Tentang Kami</a>
+            <a href="#keunggulan" className="hover:text-stone-900 transition">Keunggulan</a>
+            <a href="#layanan" className="hover:text-stone-900 transition">Layanan</a>
+          </div>
+          <Link 
+            href="https://wa.me/6281234567890?text=Halo%20Kaski%20Atelier,%20saya%20tertarik%20maklon%20gamis" 
+            target="_blank"
+            className="bg-stone-800 hover:bg-stone-700 text-white px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider transition"
+          >
+            KONSULTASI GRATIS
+          </Link>
+        </div>
+      </nav>
+
+      {/* 2. HERO SECTION */}
+      <header className="max-w-6xl mx-auto px-6 py-20 text-center md:py-32">
+        <span className="text-xs font-bold tracking-widest text-amber-700 bg-amber-50 px-3 py-1 rounded-full uppercase">
+          Premium Islamic Fashion Manufacturer
+        </span>
+        <h1 className="mt-6 text-4xl md:text-6xl font-serif font-light text-stone-950 leading-tight max-w-4xl mx-auto">
+          Wujudkan Brand Gamis Impian Anda Bersama <span className="font-normal italic text-amber-800">Kaski Atelier</span>
+        </h1>
+        <p className="mt-6 text-base md:text-lg text-stone-600 max-w-2xl mx-auto font-light leading-relaxed">
+          Konveksi & maklon spesialis gamis islami premium. Kami bantu pemilik brand fashion muslim memproduksi pakaian berkualitas butik dengan jahitan rapi, bahan premium, dan pola yang syar'i.
+        </p>
+        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+          <Link 
+            href="https://wa.me/6281234567890"
+            target="_blank"
+            className="bg-amber-800 hover:bg-amber-900 text-white font-medium px-8 py-3.5 rounded-md shadow-md transition"
+          >
+            Mulai Produksi Sekarang
+          </Link>
+          <a 
+            href="#keunggulan" 
+            className="bg-white border border-stone-300 text-stone-700 hover:bg-stone-50 font-medium px-8 py-3.5 rounded-md transition"
+          >
+            Lihat Keunggulan Kami
+          </a>
+        </div>
+      </header>
+
+      {/* 3. VALUE PROPOSITION / KEUNGGULAN */}
+      <section id="keunggulan" className="bg-stone-100 py-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl font-serif text-stone-900">Mengapa Memilih Kaski Atelier?</h2>
+            <p className="text-stone-500 mt-2 font-light">Kami mengutamakan kualitas demi menjaga reputasi brand fashion muslim Anda.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Card 1 */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-200/60">
+              <div className="w-12 h-12 bg-amber-50 text-amber-800 rounded-lg flex items-center justify-center font-bold text-lg mb-6">🪡</div>
+              <h3 className="text-lg font-medium text-stone-900 mb-2">Kualitas Jahitan Butik</h3>
+              <p className="text-stone-600 text-sm font-light leading-relaxed">
+                Setiap gamis dijahit oleh tim ahli dengan standar jahit halus (bukan jahit konveksi massal asal-asalan) sehingga kuat dan rapi.
+              </p>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-200/60">
+              <div className="w-12 h-12 bg-amber-50 text-amber-800 rounded-lg flex items-center justify-center font-bold text-lg mb-6">📏</div>
+              <h3 className="text-lg font-medium text-stone-900 mb-2">Pola Syar'i & Anggun</h3>
+              <p className="text-stone-600 text-sm font-light leading-relaxed">
+                Kami memahami standar busana islami. Potongan gamis longgar, tidak menerawang, namun tetap jatuh anggun saat dikenakan.
+              </p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-stone-200/60">
+              <div className="w-12 h-12 bg-amber-50 text-amber-800 rounded-lg flex items-center justify-center font-bold text-lg mb-6">🤝</div>
+              <h3 className="text-lg font-medium text-stone-900 mb-2">Konsultasi Desain & Bahan</h3>
+              <p className="text-stone-600 text-sm font-light leading-relaxed">
+                Belum punya bahan atau pola? Tim kami siap membantu mencarikan kain terbaik mulai dari Silk, Ceruti, hingga Katun Premium.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. CALL TO ACTION */}
+      <section className="bg-stone-900 text-white py-16 text-center">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-2xl md:text-3xl font-serif mb-4">Siap Meluncurkan Koleksi Gamis Terbaru Anda?</h2>
+          <p className="text-stone-400 font-light mb-8 max-w-lg mx-auto text-sm md:text-base">
+            Minimal kuantitas produksi (MOQ) rendah, sangat cocok untuk pemula yang baru memulai bisnis fashion muslim.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          <Link 
+            href="https://wa.me/6281234567890"
             target="_blank"
-            rel="noopener noreferrer"
+            className="bg-amber-600 hover:bg-amber-700 text-white font-medium px-8 py-3.5 rounded-md shadow-lg inline-block transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Hubungi Admin Via WhatsApp
+          </Link>
         </div>
-      </main>
+      </section>
+
+      {/* 5. FOOTER */}
+      <footer className="border-t border-stone-200 py-8 text-center text-xs text-stone-500">
+        <p>&copy; 2026 Kaski Atelier. All rights reserved. Spesialis Konveksi Gamis Islami.</p>
+      </footer>
+
     </div>
   );
 }
