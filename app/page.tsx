@@ -1,986 +1,612 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const WA_LINK =
   "https://wa.me/6281311308427?text=Halo%20Kaski%20Atelier,%20saya%20tertarik%20untuk%20konsultasi%20produksi%20busana.";
-const IG_LINK =
-  "https://www.instagram.com/kaski.atelier?igsh=MWFpMXQ4aWEwZGR5eg==";
+const IG_LINK = "https://www.instagram.com/kaski.atelier?igsh=MWFpMXQ4aWEwZGR5eg==";
 
 const NAV_LINKS = [
   { label: "Tentang Kami", href: "#tentang" },
   { label: "Layanan", href: "#layanan" },
-  { label: "Inovasi", href: "#inovasi" },
-  { label: "Event", href: "#event" },
+  { label: "Inovasi Produk", href: "#produk" },
+  { label: "Tim Kami", href: "#tim" },
+  { label: "Rekam Jejak", href: "#rekam-jejak" },
   { label: "Kontak", href: "#kontak" },
 ];
 
 const SERVICES = [
   {
-    icon: "✦",
     title: "Ready-to-Wear",
-    desc: "Koleksi busana modest yang sudah dirancang dan siap pakai. Memadukan unsur wastra etnik lokal dengan gaya modern yang elegan dan berkarakter.",
-    tags: ["Busana Kasual", "Outer Etnik", "Hijab & Pashmina", "Mukena"],
+    desc:
+      "Koleksi busana modest siap pakai dengan desain khas Kaski yang memadukan unsur wastra etnik dan gaya modern classic casual — siap dibeli dan langsung digunakan tanpa penyesuaian.",
   },
   {
-    icon: "◈",
     title: "Custom Order",
-    desc: "Busana eksklusif yang dirancang sesuai kebutuhan pribadi Anda — mulai dari ukuran, warna, detail kain, hingga pilihan motif wastra yang Anda inginkan.",
-    tags: ["Gaun", "Kebaya", "Seragam", "Ukuran Custom"],
+    desc:
+      "Layanan pembuatan busana personal seperti gaun, kebaya, dan seragam, beserta pelengkap seperti hijab, pashmina, dan mukena — disesuaikan ukuran, warna, detail kain, hingga jenis wastra sesuai kebutuhan Anda.",
   },
   {
-    icon: "⬡",
     title: "Konveksi Profesional",
-    desc: "Produksi skala besar dengan standar kualitas butik. Tepat waktu, jahitan presisi. Melayani korporat, organisasi, komunitas, dan instansi.",
-    tags: ["Seragam Korporat", "Koleksi Organisasi", "Skala Besar", "Butik Quality"],
+    desc:
+      "Layanan produksi skala besar dan komunitas — seragam korporat, koleksi organisasi, hingga kebutuhan instansi. Setiap helai diproses dengan standar kualitas butik, presisi jahitan, dan ketepatan waktu produksi.",
   },
 ];
 
-const INNOVATIONS = [
+const PRODUCTS = [
   {
-    label: "Kaf Semi Jacket",
-    desc: "Menggabungkan gaya urban modern dengan motif tradisional Nusantara. Dibuat dari kain perca sisa produksi — sangat sustainable. Warna kontras biru navy, biru muda, putih, dan maroon dengan sentuhan batik & tenun.",
-    tag: "Eksotika Urban Nusantara",
+    title: "Kaf Semi Jacket",
+    desc:
+      "Konsep urban modern berpadu motif tradisional Nusantara. Dibuat dari kain perca sisa produksi Kaski yang sustainable, dengan potongan simpel, warna kontras (navy, biru muda, putih, maroon), dan sentuhan motif batik & tenun.",
   },
   {
-    label: "Kemeja Sashiko",
-    desc: "Desain minimalis yang diperkaya detail Batik Depok dijahit tangan menggunakan teknik sashiko Jepang. Setiap helai bersifat handmade, unik, dan autentik.",
-    tag: "Handmade · Batik Depok",
+    title: "Kemeja Sashiko",
+    desc:
+      "Desain minimalis dengan detail Batik Depok yang dijahit tangan menggunakan teknik sashiko. Sentuhan handmade menjadikan setiap kemeja unik dan autentik.",
   },
+];
+
+const TEAM = [
+  { name: "Latifah", role: "Owner Kaski Atelier" },
+  { name: "Kinanti", role: "Manajer" },
+  { name: "Gunawan", role: "Pembimbing" },
+  { name: "Neetha", role: "Keuangan" },
+  { name: "Kafka", role: "Marketing" },
+  { name: "Aep Saipudin", role: "Tim Produksi" },
+];
+
+const GALLERY_CAPTIONS = [
+  "Koleksi Wastra Etnik — Modest Wear",
+  "Indonesia Fashion Week 2025",
+  "Kemeja Sashiko Handmade",
+  "Kaf Semi Jacket — Eksotika Urban Nusantara",
+  "Fashion Show IN2MF 2025",
+  "Layanan Konveksi Skala Besar",
 ];
 
 const EVENTS = [
-  { year: "2022", items: ["DEFF — Hotel Bumi Wiyata Depok", "Fashion Show KFD — Gedung Baleka 2", "Depok POP — Alun-alun Kota Depok", "Grand Final ADUJAK KOTA DEPOK", "BUNDA AWARD — Gedung Baleka 2"] },
-  { year: "2023", items: ["Anjungan Jawa Barat — TMII Jakarta", "Lebaran Depok — Sawangan", "WE.ID Gebyar HUT RI — Transtudio Cibubur", "Salimah Expo — Depok Mall"] },
-  { year: "2024", items: ["APEKSI 2024", "Ramadhan Fashion Show — Margo City Depok", "ADUJAK 2024", "IN2MF — 30 Oktober–3 November 2024"] },
-  { year: "2025", items: ["Ramadhan Fashion Parade — Margocity Mall", "Fashion Show & Exhibition by Designer EOMF — DPR RI", "Fashion Show with Rhino Indonesia", "Exhibition Indonesia Fashion Week — JCC Cendrawasih Hall", "Exhibition Karya Kreatif Jabar — Trans Convention Center Bandung", "Bazaar Freedom & Style Without Waste", "Fashion Show IN2MF 2025", "Fashion Show IPEMI — Hotel Royal Kuningan", "Festival Tring 2025"] },
+  "Indonesia Fashion Week, Cendrawasih Hall JCC (2025)",
+  "IN2MF — Indonesia International Modest Fashion (2024 & 2025)",
+  "Ramadhan Fashion Parade, Margo City Depok (2024 & 2025)",
+  "Fashion Show & Exhibition by Designer EOMF, DPR RI (2025)",
+  "Exhibition Karya Kreatif Jawa Barat, Trans Convention Center Bandung (2025)",
+  "APEKSI 2024",
+  "Fashion Show Anjungan Jawa Barat, TMII Jakarta (2023)",
+  "DEFF – Depok Fashion Show Festival (2022)",
 ];
 
-const BATIK_MOTIFS = ["Gong Sibolong", "Ikan Memphis", "Irisan Belimbing", "Tugu Depok"];
+function WhatsAppIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.41-1.36a9.86 9.86 0 0 0 4.63 1.18h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.13-2.9-7C17.18 3.03 14.69 2 12.04 2zm0 18.06h-.01a8.18 8.18 0 0 1-4.17-1.14l-.3-.18-3.1.78.83-3.02-.2-.31a8.15 8.15 0 0 1-1.25-4.3c0-4.51 3.68-8.18 8.2-8.18 2.19 0 4.25.85 5.8 2.4a8.13 8.13 0 0 1 2.4 5.79c0 4.52-3.68 8.16-8.2 8.16zm4.49-6.13c-.25-.12-1.46-.72-1.68-.8-.23-.08-.39-.12-.56.12-.16.25-.64.8-.78.96-.14.16-.29.18-.54.06-.25-.12-1.04-.38-1.99-1.22-.74-.65-1.23-1.46-1.38-1.71-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.24-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01-.16 0-.43.06-.66.31-.23.25-.86.84-.86 2.04 0 1.2.88 2.37 1 2.53.12.16 1.73 2.65 4.2 3.71.59.25 1.05.4 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z" />
+    </svg>
+  );
+}
 
-export default function KaskiAtelier() {
-  const [scrolled, setScrolled] = useState(false);
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.71 3.71 0 0 1-1.38-.9 3.71 3.71 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.13 1.39A5.86 5.86 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.39 2.13.67.67 1.34 1.08 2.13 1.39.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.39.67-.67 1.08-1.34 1.39-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.86 5.86 0 0 0-1.39-2.13A5.86 5.86 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z" />
+    </svg>
+  );
+}
+
+export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeYear, setActiveYear] = useState("2025");
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
-
-        :root {
-          --ink: #1a1410;
-          --gold: #8B6914;
-          --gold-light: #C49A2C;
-          --cream: #F5EFE3;
-          --stone: #E8DECE;
-          --mist: #F9F5EE;
-          --forest: #2C3B2D;
-          --clay: #7A5C3E;
-          --warm-white: #FDFAF5;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-          background: var(--warm-white);
-          color: var(--ink);
-          font-family: 'DM Sans', sans-serif;
-          font-weight: 300;
-          line-height: 1.65;
-        }
-
-        .display { font-family: 'Cormorant Garamond', serif; }
-
-        /* NAVBAR */
-        .nav {
-          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-          transition: all 0.4s ease;
-          padding: 1.25rem 2rem;
-        }
-        .nav.scrolled {
-          background: rgba(253, 250, 245, 0.96);
-          backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(139,105,20,0.15);
-          padding: 0.85rem 2rem;
-          box-shadow: 0 2px 24px rgba(26,20,16,0.07);
-        }
-        .nav-inner {
-          max-width: 1200px; margin: 0 auto;
-          display: flex; align-items: center; justify-content: space-between;
-        }
-        .nav-logo {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1.5rem;
-          font-weight: 600;
-          color: var(--forest);
-          letter-spacing: 0.02em;
-          text-decoration: none;
-          display: flex; flex-direction: column; line-height: 1;
-        }
-        .nav-logo span {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.6rem;
-          font-weight: 400;
-          letter-spacing: 0.25em;
-          color: var(--gold);
-          text-transform: uppercase;
-          margin-top: 2px;
-        }
-        .nav-links {
-          display: flex; gap: 2rem; list-style: none;
-        }
-        .nav-links a {
-          color: var(--ink); text-decoration: none;
-          font-size: 0.82rem; letter-spacing: 0.12em;
-          text-transform: uppercase; font-weight: 400;
-          transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--gold); }
-        .nav-ig {
-          display: flex; align-items: center; gap: 0.5rem;
-          color: var(--forest); text-decoration: none;
-          font-size: 0.8rem; letter-spacing: 0.08em;
-          border: 1px solid rgba(44,59,45,0.3);
-          padding: 0.4rem 0.9rem; border-radius: 100px;
-          transition: all 0.2s;
-        }
-        .nav-ig:hover { background: var(--forest); color: var(--warm-white); }
-        .hamburger {
-          display: none; cursor: pointer;
-          background: none; border: none;
-          font-size: 1.4rem; color: var(--forest);
-        }
-        .mobile-menu {
-          display: none; position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: var(--warm-white);
-          z-index: 99; flex-direction: column;
-          align-items: center; justify-content: center; gap: 2rem;
-        }
-        .mobile-menu.open { display: flex; }
-        .mobile-menu a {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 2rem; color: var(--ink); text-decoration: none;
-          font-style: italic;
-        }
-        .mobile-close {
-          position: absolute; top: 1.5rem; right: 2rem;
-          background: none; border: none; font-size: 1.8rem;
-          cursor: pointer; color: var(--forest);
-        }
-
-        /* HERO */
-        .hero {
-          min-height: 100vh;
-          background: var(--forest);
-          display: flex; flex-direction: column;
-          justify-content: flex-end;
-          position: relative; overflow: hidden;
-          padding: 6rem 2rem 4rem;
-        }
-        .hero-texture {
-          position: absolute; inset: 0;
-          background-image:
-            radial-gradient(circle at 20% 80%, rgba(196,154,44,0.12) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(122,92,62,0.15) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(139,105,20,0.05) 0%, transparent 70%);
-          pointer-events: none;
-        }
-        .hero-motif {
-          position: absolute; top: 0; right: 0;
-          width: 45%; height: 100%;
-          background: linear-gradient(135deg, rgba(196,154,44,0.08) 0%, rgba(44,59,45,0.4) 100%);
-          clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%);
-        }
-        .hero-motif::before {
-          content: '';
-          position: absolute; inset: 0;
-          background-image: repeating-linear-gradient(
-            45deg,
-            rgba(196,154,44,0.06) 0px, rgba(196,154,44,0.06) 1px,
-            transparent 1px, transparent 20px
-          );
-        }
-        .hero-content {
-          position: relative; z-index: 2;
-          max-width: 1200px; margin: 0 auto; width: 100%;
-        }
-        .hero-eyebrow {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.72rem; letter-spacing: 0.3em;
-          text-transform: uppercase;
-          color: var(--gold-light); margin-bottom: 1.5rem;
-          display: flex; align-items: center; gap: 0.75rem;
-        }
-        .hero-eyebrow::before {
-          content: '';
-          display: block; width: 2rem; height: 1px;
-          background: var(--gold-light);
-        }
-        .hero-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(3.5rem, 9vw, 7.5rem);
-          font-weight: 300; line-height: 1;
-          color: var(--cream); letter-spacing: -0.01em;
-          margin-bottom: 0.25rem;
-        }
-        .hero-title em {
-          font-style: italic;
-          color: var(--gold-light);
-        }
-        .hero-subtitle {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(1rem, 2.5vw, 1.4rem);
-          font-style: italic; color: rgba(245,239,227,0.6);
-          margin-bottom: 2.5rem; font-weight: 300;
-        }
-        .hero-desc {
-          font-size: 0.9rem; color: rgba(245,239,227,0.65);
-          max-width: 480px; line-height: 1.8; margin-bottom: 3rem;
-        }
-        .hero-ctas {
-          display: flex; gap: 1rem; flex-wrap: wrap;
-        }
-        .btn-primary {
-          background: var(--gold);
-          color: var(--warm-white); text-decoration: none;
-          padding: 0.85rem 2rem; border-radius: 2px;
-          font-size: 0.82rem; letter-spacing: 0.12em;
-          text-transform: uppercase; font-weight: 500;
-          transition: all 0.25s;
-          display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-        .btn-secondary {
-          color: var(--cream); text-decoration: none;
-          padding: 0.85rem 2rem; border-radius: 2px;
-          font-size: 0.82rem; letter-spacing: 0.12em;
-          text-transform: uppercase; font-weight: 400;
-          border: 1px solid rgba(245,239,227,0.3);
-          transition: all 0.25s;
-          display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-secondary:hover { border-color: var(--gold-light); color: var(--gold-light); }
-        .hero-stats {
-          position: absolute; right: 2rem; bottom: 4rem;
-          z-index: 2;
-          display: flex; flex-direction: column; gap: 1.5rem;
-          text-align: right;
-        }
-        .hero-stat-num {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 2.2rem; font-weight: 300;
-          color: var(--gold-light); line-height: 1;
-        }
-        .hero-stat-label {
-          font-size: 0.68rem; letter-spacing: 0.2em;
-          text-transform: uppercase; color: rgba(245,239,227,0.45);
-        }
-        .hero-scroll {
-          position: absolute; left: 50%; bottom: 2rem;
-          transform: translateX(-50%); z-index: 2;
-          display: flex; flex-direction: column;
-          align-items: center; gap: 0.5rem;
-          color: rgba(245,239,227,0.35);
-          font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-          animation: scrollBounce 2s ease-in-out infinite;
-        }
-        @keyframes scrollBounce {
-          0%, 100% { transform: translateX(-50%) translateY(0); }
-          50% { transform: translateX(-50%) translateY(4px); }
-        }
-        .hero-scroll::before {
-          content: '';
-          width: 1px; height: 3rem;
-          background: linear-gradient(to bottom, transparent, rgba(196,154,44,0.5));
-        }
-
-        /* SECTION BASE */
-        .section { padding: 6rem 2rem; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .section-eyebrow {
-          font-size: 0.7rem; letter-spacing: 0.3em;
-          text-transform: uppercase; color: var(--gold);
-          margin-bottom: 0.75rem;
-          display: flex; align-items: center; gap: 0.75rem;
-        }
-        .section-eyebrow::before {
-          content: ''; display: block;
-          width: 1.5rem; height: 1px; background: var(--gold);
-        }
-        .section-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(2rem, 4vw, 3rem);
-          font-weight: 300; line-height: 1.15;
-          color: var(--forest);
-        }
-        .section-title em { font-style: italic; color: var(--clay); }
-
-        /* TENTANG */
-        .about-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 5rem; align-items: center;
-        }
-        .about-left .section-title { margin-bottom: 1.5rem; }
-        .about-body {
-          font-size: 0.92rem; color: rgba(26,20,16,0.7);
-          line-height: 1.9; margin-bottom: 1.25rem;
-        }
-        .about-right {
-          position: relative;
-        }
-        .about-card {
-          background: var(--forest);
-          padding: 2.5rem;
-          position: relative;
-        }
-        .about-card::before {
-          content: '';
-          position: absolute; top: -0.75rem; left: -0.75rem; right: 0.75rem; bottom: 0.75rem;
-          border: 1px solid rgba(196,154,44,0.3);
-          pointer-events: none;
-        }
-        .about-card-label {
-          font-size: 0.68rem; letter-spacing: 0.25em;
-          text-transform: uppercase; color: var(--gold-light);
-          margin-bottom: 1.25rem;
-        }
-        .about-card-name {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1.75rem; font-weight: 400;
-          color: var(--cream); margin-bottom: 0.25rem;
-          font-style: italic;
-        }
-        .about-card-role {
-          font-size: 0.78rem; color: rgba(245,239,227,0.5);
-          letter-spacing: 0.1em; margin-bottom: 1.5rem;
-        }
-        .about-card-roles {
-          display: flex; flex-direction: column; gap: 0.5rem;
-        }
-        .about-card-role-item {
-          font-size: 0.8rem; color: rgba(245,239,227,0.7);
-          display: flex; align-items: flex-start; gap: 0.5rem;
-          line-height: 1.5;
-        }
-        .about-card-role-item::before {
-          content: '—'; color: var(--gold); font-size: 0.7rem;
-          margin-top: 0.15rem; flex-shrink: 0;
-        }
-        .motif-tags {
-          display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem;
-        }
-        .motif-tag {
-          font-size: 0.72rem; letter-spacing: 0.08em;
-          padding: 0.3rem 0.75rem;
-          border: 1px solid rgba(139,105,20,0.3);
-          color: var(--clay); border-radius: 100px;
-          background: rgba(139,105,20,0.05);
-        }
-
-        /* LAYANAN */
-        .services-bg { background: var(--mist); }
-        .services-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.5px; margin-top: 3.5rem;
-          background: rgba(139,105,20,0.15);
-          border: 1px solid rgba(139,105,20,0.15);
-        }
-        .service-card {
-          background: var(--warm-white);
-          padding: 2.5rem 2rem;
-          transition: background 0.3s;
-        }
-        .service-card:hover { background: var(--cream); }
-        .service-icon {
-          font-size: 1.5rem; color: var(--gold);
-          margin-bottom: 1.25rem; display: block;
-        }
-        .service-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1.5rem; font-weight: 400;
-          color: var(--forest); margin-bottom: 0.75rem;
-        }
-        .service-desc {
-          font-size: 0.85rem; color: rgba(26,20,16,0.65);
-          line-height: 1.85; margin-bottom: 1.5rem;
-        }
-        .service-tags {
-          display: flex; flex-wrap: wrap; gap: 0.4rem;
-        }
-        .service-tag {
-          font-size: 0.68rem; letter-spacing: 0.06em;
-          padding: 0.2rem 0.6rem;
-          background: rgba(44,59,45,0.07);
-          color: var(--forest); border-radius: 2px;
-        }
-        .services-cta {
-          margin-top: 3rem; text-align: center;
-        }
-
-        /* INOVASI */
-        .innovation-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 2rem; margin-top: 3.5rem;
-        }
-        .innovation-card {
-          border: 1px solid rgba(139,105,20,0.2);
-          padding: 2.5rem;
-          position: relative;
-          transition: border-color 0.3s;
-        }
-        .innovation-card:hover { border-color: var(--gold); }
-        .innovation-tag {
-          position: absolute; top: 1.5rem; right: 1.5rem;
-          font-size: 0.65rem; letter-spacing: 0.15em;
-          text-transform: uppercase; color: var(--gold);
-          background: rgba(139,105,20,0.08);
-          padding: 0.25rem 0.6rem; border-radius: 100px;
-        }
-        .innovation-label {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1.6rem; font-style: italic;
-          font-weight: 400; color: var(--forest);
-          margin-bottom: 1rem;
-        }
-        .innovation-desc {
-          font-size: 0.85rem; color: rgba(26,20,16,0.65);
-          line-height: 1.85;
-        }
-        .innovation-accent {
-          margin-top: 1.5rem;
-          width: 2rem; height: 2px; background: var(--gold);
-        }
-
-        /* EVENT */
-        .events-bg { background: var(--forest); }
-        .events-bg .section-title { color: var(--cream); }
-        .events-bg .section-title em { color: var(--gold-light); }
-        .events-bg .section-eyebrow { color: var(--gold-light); }
-        .events-bg .section-eyebrow::before { background: var(--gold-light); }
-        .events-tabs {
-          display: flex; gap: 0; margin-top: 3rem;
-          border-bottom: 1px solid rgba(245,239,227,0.15);
-        }
-        .events-tab {
-          background: none; border: none; cursor: pointer;
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1.4rem; font-weight: 300;
-          color: rgba(245,239,227,0.35);
-          padding: 0.75rem 1.75rem;
-          border-bottom: 2px solid transparent;
-          margin-bottom: -1px; transition: all 0.25s;
-        }
-        .events-tab.active {
-          color: var(--gold-light);
-          border-bottom-color: var(--gold-light);
-        }
-        .events-tab:hover:not(.active) { color: rgba(245,239,227,0.65); }
-        .events-list {
-          margin-top: 2.5rem;
-          display: grid; grid-template-columns: repeat(2, 1fr);
-          gap: 0.75rem;
-        }
-        .event-item {
-          display: flex; align-items: flex-start; gap: 0.75rem;
-          font-size: 0.85rem; color: rgba(245,239,227,0.7);
-          line-height: 1.6; padding: 0.75rem 0;
-          border-bottom: 1px solid rgba(245,239,227,0.07);
-        }
-        .event-dot {
-          width: 4px; height: 4px; border-radius: 50%;
-          background: var(--gold-light); margin-top: 0.55rem;
-          flex-shrink: 0;
-        }
-
-        /* KREDIBILITAS */
-        .cred-strip {
-          background: var(--stone);
-          padding: 3rem 2rem;
-          overflow: hidden;
-        }
-        .cred-inner {
-          max-width: 1200px; margin: 0 auto;
-          display: flex; align-items: center;
-          justify-content: space-between; gap: 2rem;
-          flex-wrap: wrap;
-        }
-        .cred-stat {
-          text-align: center; flex: 1; min-width: 120px;
-        }
-        .cred-num {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 2.5rem; font-weight: 300;
-          color: var(--forest); line-height: 1;
-        }
-        .cred-label {
-          font-size: 0.7rem; letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: rgba(26,20,16,0.5); margin-top: 0.35rem;
-        }
-        .cred-divider {
-          width: 1px; height: 3rem;
-          background: rgba(26,20,16,0.15);
-        }
-
-        /* KONTAK */
-        .contact-grid {
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 5rem; align-items: start;
-        }
-        .contact-left .section-title { margin-bottom: 1rem; }
-        .contact-left p {
-          font-size: 0.9rem; color: rgba(26,20,16,0.65);
-          line-height: 1.85; margin-bottom: 2rem;
-        }
-        .contact-ctas {
-          display: flex; flex-direction: column; gap: 0.75rem;
-        }
-        .contact-btn {
-          display: flex; align-items: center; gap: 1rem;
-          text-decoration: none; padding: 1.1rem 1.5rem;
-          border: 1px solid rgba(139,105,20,0.25);
-          color: var(--ink); font-size: 0.85rem;
-          transition: all 0.25s;
-          background: var(--warm-white);
-        }
-        .contact-btn:hover { background: var(--forest); color: var(--cream); border-color: var(--forest); }
-        .contact-btn-icon { font-size: 1.1rem; flex-shrink: 0; }
-        .contact-btn-text { font-size: 0.78rem; letter-spacing: 0.05em; }
-        .contact-right {
-          background: var(--cream);
-          padding: 2.5rem;
-          border-top: 3px solid var(--gold);
-        }
-        .contact-info-label {
-          font-size: 0.68rem; letter-spacing: 0.2em;
-          text-transform: uppercase; color: var(--gold);
-          margin-bottom: 1.25rem;
-        }
-        .contact-info-item {
-          margin-bottom: 1.25rem;
-        }
-        .contact-info-key {
-          font-size: 0.72rem; letter-spacing: 0.1em;
-          text-transform: uppercase; color: rgba(26,20,16,0.45);
-          margin-bottom: 0.2rem;
-        }
-        .contact-info-val {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1.1rem; color: var(--forest);
-        }
-        .contact-mission {
-          margin-top: 2rem; padding-top: 1.5rem;
-          border-top: 1px solid rgba(139,105,20,0.2);
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1rem; font-style: italic;
-          color: var(--clay); line-height: 1.7;
-        }
-
-        /* FOOTER */
-        .footer {
-          background: var(--ink);
-          padding: 3rem 2rem;
-          color: rgba(245,239,227,0.45);
-          font-size: 0.78rem;
-        }
-        .footer-inner {
-          max-width: 1200px; margin: 0 auto;
-          display: flex; justify-content: space-between;
-          align-items: flex-end; gap: 2rem;
-          flex-wrap: wrap;
-        }
-        .footer-logo {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 1.4rem; color: var(--cream);
-          font-style: italic; margin-bottom: 0.25rem;
-        }
-        .footer-tagline {
-          font-size: 0.68rem; letter-spacing: 0.2em;
-          text-transform: uppercase; color: var(--gold);
-        }
-        .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-        .footer-links a {
-          color: rgba(245,239,227,0.4); text-decoration: none;
-          font-size: 0.75rem; letter-spacing: 0.08em;
-          transition: color 0.2s;
-        }
-        .footer-links a:hover { color: var(--gold-light); }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-          .nav-links, .nav-ig { display: none; }
-          .hamburger { display: block; }
-          .hero-stats { display: none; }
-          .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-          .services-grid { grid-template-columns: 1fr; }
-          .innovation-grid { grid-template-columns: 1fr; }
-          .events-list { grid-template-columns: 1fr; }
-          .cred-divider { display: none; }
-          .footer-inner { flex-direction: column; align-items: flex-start; }
-        }
-        @media (max-width: 640px) {
-          .section { padding: 4rem 1.25rem; }
-          .hero { padding: 5rem 1.25rem 3rem; }
-          .events-tabs { overflow-x: auto; }
-          .events-tab { padding: 0.75rem 1.25rem; font-size: 1.2rem; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          * { animation: none !important; transition: none !important; }
-        }
-      `}</style>
-
-      {/* NAV */}
-      <nav className={`nav${scrolled ? " scrolled" : ""}`}>
-        <div className="nav-inner">
-          <a className="nav-logo" href="/">
-            Kaski Atelier
-            <span>Warna Etnik · Gaya Otentik</span>
+    <main className="min-h-screen bg-stone-50 text-stone-800 font-sans">
+      {/* NAVBAR */}
+      <header className="sticky top-0 z-50 bg-stone-50/90 backdrop-blur border-b border-amber-900/10">
+        <nav className="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between">
+          <a href="#" className="flex flex-col leading-none">
+            <span className="text-2xl font-serif italic text-emerald-800">
+              Kaski
+            </span>
+            <span className="text-xs tracking-[0.3em] uppercase text-amber-700 -mt-1">
+              Atelier
+            </span>
           </a>
-          <ul className="nav-links">
-            {NAV_LINKS.map((l) => (
-              <li key={l.label}>
-                <a href={l.href}>{l.label}</a>
-              </li>
+
+          <div className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-stone-600 hover:text-amber-800 transition-colors"
+              >
+                {link.label}
+              </a>
             ))}
-          </ul>
-          <a className="nav-ig" href={IG_LINK} target="_blank" rel="noopener noreferrer">
-            ◎ Instagram
-          </a>
-          <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Buka menu">
-            ☰
-          </button>
-        </div>
-      </nav>
+          </div>
 
-      {/* MOBILE MENU */}
-      <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
-        <button className="mobile-close" onClick={() => setMenuOpen(false)} aria-label="Tutup menu">✕</button>
-        {NAV_LINKS.map((l) => (
-          <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
-        ))}
-        <a href={IG_LINK} target="_blank" rel="noopener noreferrer" style={{ fontSize: "1rem", fontFamily: "DM Sans", letterSpacing: "0.15em", color: "var(--gold)" }}>
-          @kaski.atelier
-        </a>
-      </div>
+          <div className="hidden md:flex items-center gap-4">
+            <a
+              href={IG_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram Kaski Atelier"
+              className="text-stone-500 hover:text-amber-800 transition-colors"
+            >
+              <InstagramIcon className="w-5 h-5" />
+            </a>
+            <a
+              href={WA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-amber-800 hover:bg-amber-900 text-amber-50 text-sm font-semibold px-5 py-2.5 rounded-full transition-colors shadow-sm"
+            >
+              <WhatsAppIcon className="w-4 h-4" />
+              Konsultasi Gratis
+            </a>
+          </div>
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden p-2 text-stone-700"
+            aria-label="Buka menu"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-7 h-7">
+              {menuOpen ? (
+                <path strokeWidth="2" strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path strokeWidth="2" strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
+        </nav>
+
+        {menuOpen && (
+          <div className="md:hidden border-t border-amber-900/10 bg-stone-50 px-5 py-4 flex flex-col gap-4">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="text-stone-700 font-medium"
+              >
+                {link.label}
+              </a>
+            ))}
+            <div className="flex items-center gap-4 pt-2">
+              <a
+                href={IG_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-500"
+                aria-label="Instagram Kaski Atelier"
+              >
+                <InstagramIcon className="w-5 h-5" />
+              </a>
+              <a
+                href={WA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-2 bg-amber-800 hover:bg-amber-900 text-amber-50 text-sm font-semibold px-5 py-2.5 rounded-full"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+                Konsultasi Gratis
+              </a>
+            </div>
+          </div>
+        )}
+      </header>
 
       {/* HERO */}
-      <section className="hero">
-        <div className="hero-texture" />
-        <div className="hero-motif" />
-
-        <div className="hero-content">
-          <div className="hero-eyebrow">Modest Fashion · Depok, Jawa Barat</div>
-          <h1 className="hero-title display">
-            Kaski<br /><em>Atelier</em>
-          </h1>
-          <p className="hero-subtitle">Warna Etnik, Gaya Otentik</p>
-          <p className="hero-desc">
-            Brand modest fashion berbasis wastra etnik lokal. Menggabungkan keindahan
-            Batik Depok dengan desain classic casual yang elegan, nyaman, dan berkarakter
-            — untuk perempuan modern yang bangga dengan identitasnya.
-          </p>
-          <div className="hero-ctas">
-            <a className="btn-primary" href={WA_LINK} target="_blank" rel="noopener noreferrer">
-              Konsultasi Gratis →
-            </a>
-            <a className="btn-secondary" href="#layanan">
-              Lihat Layanan
-            </a>
-          </div>
-        </div>
-
-        <div className="hero-stats">
+      <section className="relative overflow-hidden bg-gradient-to-b from-stone-100 via-stone-50 to-stone-50">
+        <div className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(circle_at_20%_20%,#92400e_0,transparent_45%),radial-gradient(circle_at_80%_60%,#065f46_0,transparent_45%)]" />
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="hero-stat-num">1997</div>
-            <div className="hero-stat-label">Pengalaman sejak</div>
+            <span className="inline-block text-xs tracking-[0.2em] uppercase text-amber-700 font-semibold bg-amber-100 px-4 py-1.5 rounded-full mb-6">
+              Sejak 1997 · Berdiri Resmi 2018, Depok
+            </span>
+            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl leading-tight text-stone-900">
+              Warna Etnik,
+              <br />
+              <span className="text-amber-800 italic">Gaya Otentik</span>
+            </h1>
+            <p className="mt-6 text-stone-600 text-lg leading-relaxed max-w-xl">
+              Kaski Atelier menghadirkan modest fashion bergaya{" "}
+              <span className="font-semibold text-stone-800">
+                Classic Casual
+              </span>{" "}
+              dengan sentuhan wastra etnik lokal — memadukan budaya dan
+              modernitas dalam setiap busana yang elegan, nyaman, dan
+              berkarakter.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <a
+                href={WA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-amber-800 hover:bg-amber-900 text-amber-50 font-semibold px-7 py-3.5 rounded-full transition-colors shadow-md shadow-amber-900/20"
+              >
+                <WhatsAppIcon className="w-5 h-5" />
+                Konsultasi Gratis via WhatsApp
+              </a>
+              <a
+                href="#layanan"
+                className="inline-flex items-center justify-center gap-2 border border-stone-300 hover:border-amber-700 text-stone-700 hover:text-amber-800 font-semibold px-7 py-3.5 rounded-full transition-colors"
+              >
+                Lihat Layanan Kami
+              </a>
+            </div>
           </div>
-          <div>
-            <div className="hero-stat-num">20+</div>
-            <div className="hero-stat-label">Event nasional</div>
-          </div>
-          <div>
-            <div className="hero-stat-num">3</div>
-            <div className="hero-stat-label">Lini layanan</div>
-          </div>
-        </div>
 
-        <div className="hero-scroll">Scroll</div>
-      </section>
-
-      {/* STRIP KREDIBILITAS */}
-      <div className="cred-strip">
-        <div className="cred-inner">
-          <div className="cred-stat">
-            <div className="cred-num">27+</div>
-            <div className="cred-label">Tahun Pengalaman</div>
-          </div>
-          <div className="cred-divider" />
-          <div className="cred-stat">
-            <div className="cred-num">2018</div>
-            <div className="cred-label">Kaski Atelier Berdiri</div>
-          </div>
-          <div className="cred-divider" />
-          <div className="cred-stat">
-            <div className="cred-num">IFW</div>
-            <div className="cred-label">Indonesia Fashion Week</div>
-          </div>
-          <div className="cred-divider" />
-          <div className="cred-stat">
-            <div className="cred-num">IN2MF</div>
-            <div className="cred-label">Internasional Event</div>
-          </div>
-          <div className="cred-divider" />
-          <div className="cred-stat">
-            <div className="cred-num">DPR RI</div>
-            <div className="cred-label">Fashion Show & Exhibition</div>
-          </div>
-        </div>
-      </div>
-
-      {/* TENTANG */}
-      <section className="section" id="tentang">
-        <div className="container">
-          <div className="about-grid">
-            <div className="about-left">
-              <div className="section-eyebrow">Tentang Kami</div>
-              <h2 className="section-title display">
-                Modest fashion<br />yang <em>bercerita</em>
-              </h2>
-              <p className="about-body">
-                Kaski Atelier berdiri pada tahun 2018 di Depok, Jawa Barat, dengan pengalaman di dunia
-                fashion yang telah dimulai sejak 1997. Nama "Kaski" lahir dari penggabungan nama ketiga
-                anak sang pendiri — simbol harapan untuk meneruskan warisan nilai keluarga dan budaya.
-              </p>
-              <p className="about-body">
-                Kami mengusung konsep <strong>Classic Casual</strong> dengan sentuhan <strong>Wastra Etnik Lokal</strong>.
-                Desain kami mengedepankan perpaduan budaya dan modernitas: busana modest yang elegan,
-                nyaman, dan penuh karakter — karena setiap helai kain harus punya jiwa.
-              </p>
-              <p className="about-body">
-                Visi kami: mengedukasi, memproduksi, dan mempopulerkan fashion berbasis kekayaan
-                wastra Indonesia kepada generasi muda, agar budaya lokal tetap hidup dan relevan.
-              </p>
-              <div>
-                <div className="section-eyebrow" style={{ marginTop: "1.5rem", marginBottom: "0.5rem" }}>Motif Batik Depok kami</div>
-                <div className="motif-tags">
-                  {BATIK_MOTIFS.map((m) => (
-                    <span key={m} className="motif-tag">{m}</span>
-                  ))}
-                </div>
+          <div className="relative">
+            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-amber-900 shadow-2xl flex items-center justify-center overflow-hidden">
+              <div className="text-center px-10">
+                <p className="font-serif italic text-amber-100 text-3xl mb-2">
+                  Kaski
+                </p>
+                <p className="tracking-[0.4em] uppercase text-emerald-200 text-sm">
+                  Atelier
+                </p>
+                <div className="mt-8 h-px w-16 bg-amber-300/50 mx-auto" />
+                <p className="mt-8 text-stone-100/80 text-sm leading-relaxed">
+                  Batik Depok · Motif Gong Sibolong
+                  <br />
+                  Ikan Memphis · Irisan Belimbing · Tugu
+                </p>
               </div>
             </div>
+            <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl px-6 py-4 hidden sm:block">
+              <p className="text-2xl font-bold text-amber-800">25+</p>
+              <p className="text-xs text-stone-500 mt-0.5 max-w-[140px]">
+                Event &amp; fashion show sejak 2022
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="about-right">
-              <div className="about-card">
-                <div className="about-card-label">Founder & Owner</div>
-                <div className="about-card-name">Latifah (Efa)</div>
-                <div className="about-card-role">Kaski Atelier · Est. 2018</div>
-                <div className="about-card-roles">
-                  <div className="about-card-role-item">Ketua Komunitas Fesyen Depok (KFD) 2021–2024</div>
-                  <div className="about-card-role-item">Ketua Fashion Story Community (FSC)</div>
-                  <div className="about-card-role-item">Sekretaris UMKM Ratu Jaya</div>
-                  <div className="about-card-role-item">Pengurus Ikatan Komunitas Perias Depok (IKAPEDE)</div>
-                  <div className="about-card-role-item">Bendahara d'Katalia Depok</div>
-                  <div className="about-card-role-item">Pengurus Korwil Pusat PPUMI</div>
-                </div>
-              </div>
+      {/* TENTANG KAMI */}
+      <section id="tentang" className="max-w-7xl mx-auto px-5 sm:px-8 py-20 md:py-28">
+        <div className="grid md:grid-cols-2 gap-14 items-start">
+          <div>
+            <span className="text-xs tracking-[0.2em] uppercase text-amber-700 font-semibold">
+              Tentang Kami
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl text-stone-900 mt-3 mb-6">
+              Warisan Budaya dalam Setiap Jahitan
+            </h2>
+            <p className="text-stone-600 leading-relaxed mb-4">
+              Kaski Atelier merupakan brand modest fashion yang berlokasi di
+              Depok, Jawa Barat, didirikan secara resmi pada tahun 2018 oleh{" "}
+              <span className="font-semibold text-stone-800">
+                Ibu Latifah (Efa)
+              </span>
+              . Meski resmi berdiri pada 2018, pengalaman beliau di dunia
+              fashion telah dimulai sejak tahun 1997.
+            </p>
+            <p className="text-stone-600 leading-relaxed mb-4">
+              Nama &ldquo;Kaski&rdquo; berasal dari penggabungan nama ketiga
+              anak pendiri — simbol harapan untuk melanjutkan usaha sambil
+              menjaga nilai-nilai keluarga dan budaya. Kaski Atelier mengusung
+              konsep{" "}
+              <span className="font-semibold text-stone-800">
+                Classic Casual
+              </span>{" "}
+              dengan sentuhan wastra etnik lokal, seperti Batik Depok motif
+              Gong Sibolong, Ikan Memphis, irisan belimbing, hingga tugu.
+            </p>
+            <p className="text-stone-600 leading-relaxed">
+              Perpaduan budaya dan modernitas inilah yang menghadirkan busana
+              modest yang elegan, nyaman, dan berkarakter.
+            </p>
+          </div>
+
+          <div className="bg-stone-100 rounded-3xl p-8 md:p-10 border border-amber-900/10">
+            <h3 className="font-serif text-2xl text-stone-900 mb-6">
+              Visi &amp; Misi
+            </h3>
+            <div className="mb-6">
+              <p className="text-xs uppercase tracking-wider text-amber-700 font-semibold mb-2">
+                Visi
+              </p>
+              <p className="text-stone-600 leading-relaxed">
+                Mengedukasi serta memproduksi fashion yang mengikuti zaman,
+                dengan kombinasi wastra dan desain yang unik, beda, dan
+                simple — agar disukai generasi milenial.
+              </p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider text-amber-700 font-semibold mb-2">
+                Misi
+              </p>
+              <ul className="space-y-2 text-stone-600">
+                <li className="flex gap-2">
+                  <span className="text-amber-700 mt-1">●</span>
+                  Menjaga budaya bangsa Indonesia dengan melestarikan
+                  berbagai desain wastra dalam pakaian.
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-amber-700 mt-1">●</span>
+                  Mempopulerkan budaya Indonesia dengan menyesuaikan pada
+                  kemajuan zaman.
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-amber-700 mt-1">●</span>
+                  Selalu menyediakan pakaian yang berkualitas dan
+                  fashionable.
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
       {/* LAYANAN */}
-      <section className="section services-bg" id="layanan">
-        <div className="container">
-          <div className="section-eyebrow">Layanan Kami</div>
-          <h2 className="section-title display">
-            Tiga cara kami<br /><em>melayani Anda</em>
-          </h2>
+      <section id="layanan" className="bg-stone-900 py-20 md:py-28">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs tracking-[0.2em] uppercase text-amber-400 font-semibold">
+              Layanan Kami
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl text-stone-50 mt-3">
+              Dari Koleksi Siap Pakai hingga Produksi Skala Besar
+            </h2>
+          </div>
 
-          <div className="services-grid">
+          <div className="grid md:grid-cols-3 gap-6">
             {SERVICES.map((s) => (
-              <div key={s.title} className="service-card">
-                <span className="service-icon">{s.icon}</span>
-                <h3 className="service-title display">{s.title}</h3>
-                <p className="service-desc">{s.desc}</p>
-                <div className="service-tags">
-                  {s.tags.map((t) => (
-                    <span key={t} className="service-tag">{t}</span>
-                  ))}
+              <div
+                key={s.title}
+                className="bg-stone-800/60 border border-amber-500/10 rounded-2xl p-8 hover:border-amber-500/40 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center mb-5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                 </div>
+                <h3 className="font-serif text-xl text-amber-100 mb-3">
+                  {s.title}
+                </h3>
+                <p className="text-stone-400 text-sm leading-relaxed">
+                  {s.desc}
+                </p>
               </div>
             ))}
           </div>
 
-          <div className="services-cta">
-            <a className="btn-primary" href={WA_LINK} target="_blank" rel="noopener noreferrer">
-              Diskusikan Kebutuhan Anda →
+          <div className="text-center mt-12">
+            <a
+              href={WA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-stone-950 font-semibold px-7 py-3.5 rounded-full transition-colors"
+            >
+              <WhatsAppIcon className="w-5 h-5" />
+              Mulai Produksi Bersama Kami
             </a>
           </div>
         </div>
       </section>
 
-      {/* INOVASI */}
-      <section className="section" id="inovasi">
-        <div className="container">
-          <div className="section-eyebrow">Inovasi Produk</div>
-          <h2 className="section-title display">
-            Koleksi yang<br /><em>lahir dari budaya</em>
+      {/* INOVASI PRODUK */}
+      <section id="produk" className="max-w-7xl mx-auto px-5 sm:px-8 py-20 md:py-28">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="text-xs tracking-[0.2em] uppercase text-amber-700 font-semibold">
+            Inovasi Produk
+          </span>
+          <h2 className="font-serif text-3xl md:text-4xl text-stone-900 mt-3">
+            Eksplorasi Wastra dalam Karya Berkelanjutan
           </h2>
-          <p style={{ marginTop: "1rem", maxWidth: 520, fontSize: "0.9rem", color: "rgba(26,20,16,0.6)", lineHeight: 1.8 }}>
-            Dua koleksi unggulan yang menggabungkan teknik global dengan jiwa Nusantara — 
-            dan komitmen nyata terhadap keberlanjutan.
-          </p>
-
-          <div className="innovation-grid">
-            {INNOVATIONS.map((item) => (
-              <div key={item.label} className="innovation-card">
-                <span className="innovation-tag">{item.tag}</span>
-                <h3 className="innovation-label display">{item.label}</h3>
-                <p className="innovation-desc">{item.desc}</p>
-                <div className="innovation-accent" />
-              </div>
-            ))}
-          </div>
         </div>
-      </section>
 
-      {/* EVENT */}
-      <section className="section events-bg" id="event">
-        <div className="container">
-          <div className="section-eyebrow">Rekam Jejak</div>
-          <h2 className="section-title display">
-            Hadir di panggung<br /><em>fashion terbaik</em>
-          </h2>
-
-          <div className="events-tabs">
-            {EVENTS.map((e) => (
-              <button
-                key={e.year}
-                className={`events-tab${activeYear === e.year ? " active" : ""}`}
-                onClick={() => setActiveYear(e.year)}
-              >
-                {e.year}
-              </button>
-            ))}
-          </div>
-
-          {EVENTS.filter((e) => e.year === activeYear).map((e) => (
-            <div key={e.year} className="events-list">
-              {e.items.map((item) => (
-                <div key={item} className="event-item">
-                  <div className="event-dot" />
-                  <span>{item}</span>
-                </div>
-              ))}
+        <div className="grid md:grid-cols-2 gap-8">
+          {PRODUCTS.map((p) => (
+            <div
+              key={p.title}
+              className="rounded-3xl overflow-hidden border border-amber-900/10 bg-white shadow-sm"
+            >
+              <div className="h-44 bg-gradient-to-br from-amber-100 via-stone-100 to-emerald-100 flex items-center justify-center">
+                <span className="font-serif italic text-2xl text-amber-800/70">
+                  {p.title}
+                </span>
+              </div>
+              <div className="p-8">
+                <h3 className="font-serif text-xl text-stone-900 mb-3">
+                  {p.title}
+                </h3>
+                <p className="text-stone-600 text-sm leading-relaxed">
+                  {p.desc}
+                </p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* KONTAK */}
-      <section className="section" id="kontak">
-        <div className="container">
-          <div className="contact-grid">
-            <div className="contact-left">
-              <div className="section-eyebrow">Hubungi Kami</div>
-              <h2 className="section-title display">
-                Mulai dengan<br /><em>konsultasi gratis</em>
-              </h2>
-              <p>
-                Apakah Anda butuh busana custom eksklusif, koleksi ready-to-wear, atau
-                layanan konveksi skala besar? Tim Kaski Atelier siap membantu Anda
-                mewujudkan visi fashion yang autentik dan berkarakter.
-              </p>
-              <div className="contact-ctas">
-                <a className="contact-btn" href={WA_LINK} target="_blank" rel="noopener noreferrer">
-                  <span className="contact-btn-icon">💬</span>
-                  <div>
-                    <div style={{ fontWeight: 500, marginBottom: 2 }}>Chat WhatsApp</div>
-                    <div className="contact-btn-text">Respons cepat · Konsultasi gratis</div>
-                  </div>
-                </a>
-                <a className="contact-btn" href={IG_LINK} target="_blank" rel="noopener noreferrer">
-                  <span className="contact-btn-icon">◎</span>
-                  <div>
-                    <div style={{ fontWeight: 500, marginBottom: 2 }}>@kaski.atelier</div>
-                    <div className="contact-btn-text">Lihat koleksi terbaru di Instagram</div>
-                  </div>
-                </a>
-                <a className="contact-btn" href="https://www.tokopedia.com/search?q=kaski+atelier" target="_blank" rel="noopener noreferrer">
-                  <span className="contact-btn-icon">🛍</span>
-                  <div>
-                    <div style={{ fontWeight: 500, marginBottom: 2 }}>Tokopedia</div>
-                    <div className="contact-btn-text">Belanja produk ready-to-wear</div>
-                  </div>
-                </a>
+      {/* OUR TEAM */}
+      <section id="tim" className="bg-stone-100 py-20 md:py-28 border-y border-amber-900/10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs tracking-[0.2em] uppercase text-amber-700 font-semibold">
+              Tim Kami
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl text-stone-900 mt-3">
+              Orang-Orang di Balik Kaski Atelier
+            </h2>
+            <p className="text-stone-600 mt-4">
+              Dijalankan oleh tim kecil dengan dedikasi besar — memadukan
+              pengalaman bertahun-tahun dengan semangat melestarikan budaya
+              lewat fashion.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+            {TEAM.map((member) => (
+              <div key={member.name} className="text-center">
+                <div className="aspect-square rounded-full bg-gradient-to-br from-amber-200 via-stone-200 to-emerald-200 flex items-center justify-center mb-4 shadow-sm ring-4 ring-white">
+                  <span className="font-serif text-2xl text-amber-800">
+                    {member.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </span>
+                </div>
+                <p className="font-semibold text-stone-900 text-sm">
+                  {member.name}
+                </p>
+                <p className="text-xs text-stone-500 mt-0.5">{member.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* REKAM JEJAK / KREDIBILITAS */}
+      <section id="rekam-jejak" className="bg-amber-50 py-20 md:py-28 border-y border-amber-900/10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs tracking-[0.2em] uppercase text-amber-700 font-semibold">
+              Rekam Jejak
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl text-stone-900 mt-3">
+              Dipercaya di Panggung Fashion Nasional
+            </h2>
+            <p className="text-stone-600 mt-4">
+              Sejak 2022, Kaski Atelier telah tampil di puluhan pameran dan
+              fashion show — bukti konsistensi kualitas yang dipercaya
+              individu maupun mitra korporat.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {EVENTS.map((ev) => (
+              <div
+                key={ev}
+                className="bg-white rounded-xl p-5 border border-amber-900/10 text-sm text-stone-700 leading-relaxed"
+              >
+                {ev}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 bg-stone-900 rounded-2xl p-8 md:p-10 text-center">
+            <p className="text-amber-100 leading-relaxed max-w-2xl mx-auto">
+              Dengan pengalaman mendalam sejak 1997, layanan konveksi Kaski
+              Atelier siap memenuhi kebutuhan produksi skala besar maupun
+              komunitas — seragam korporat, koleksi organisasi, hingga
+              kebutuhan instansi, dengan standar kualitas butik.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* GALERI */}
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-20 md:py-28">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="text-xs tracking-[0.2em] uppercase text-amber-700 font-semibold">
+            Galeri
+          </span>
+          <h2 className="font-serif text-3xl md:text-4xl text-stone-900 mt-3">
+            Sekilas Karya &amp; Momen Kaski Atelier
+          </h2>
+          <p className="text-stone-600 mt-4">
+            Ganti placeholder berikut dengan foto produk &amp; dokumentasi
+            event asli Anda menggunakan{" "}
+            <code className="text-amber-700">next/image</code>.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {GALLERY_CAPTIONS.map((caption, i) => (
+            <div
+              key={caption}
+              className={`relative rounded-2xl overflow-hidden border border-amber-900/10 ${
+                i === 0 ? "col-span-2 row-span-2" : ""
+              }`}
+            >
+              <div
+                className={`w-full ${
+                  i === 0 ? "aspect-square md:aspect-[4/3]" : "aspect-square"
+                } bg-gradient-to-br from-stone-200 via-amber-100 to-emerald-100 flex items-end p-4`}
+              >
+                <p className="text-stone-700/80 text-xs sm:text-sm font-medium leading-snug">
+                  {caption}
+                </p>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <div className="contact-right">
-              <div className="contact-info-label">Informasi Brand</div>
-              <div className="contact-info-item">
-                <div className="contact-info-key">Brand</div>
-                <div className="contact-info-val">Kaski Atelier</div>
-              </div>
-              <div className="contact-info-item">
-                <div className="contact-info-key">Lokasi</div>
-                <div className="contact-info-val">Depok, Jawa Barat</div>
-              </div>
-              <div className="contact-info-item">
-                <div className="contact-info-key">Pengalaman Fashion</div>
-                <div className="contact-info-val">Sejak 1997</div>
-              </div>
-              <div className="contact-info-item">
-                <div className="contact-info-key">Spesialisasi</div>
-                <div className="contact-info-val">Modest Fashion · Wastra Etnik · Konveksi</div>
-              </div>
-              <div className="contact-info-item">
-                <div className="contact-info-key">Layanan Tersedia</div>
-                <div className="contact-info-val">Ready-to-Wear · Custom Order · Konveksi Profesional</div>
-              </div>
-              <div className="contact-mission">
-                "Menjaga budaya bangsa Indonesia dengan melestarikan berbagai desain wastra
-                dalam pakaian, dan mempopulerkan budaya Indonesia di era modern."
-              </div>
+      {/* KONTAK / CTA */}
+      <section id="kontak" className="max-w-7xl mx-auto px-5 sm:px-8 py-20 md:py-28">
+        <div className="bg-gradient-to-br from-emerald-900 via-emerald-800 to-amber-900 rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_30%,white,transparent_50%)]" />
+          <div className="relative">
+            <h2 className="font-serif text-3xl md:text-4xl text-amber-50 mb-4">
+              Wujudkan Busana Impian Anda
+            </h2>
+            <p className="text-emerald-50/80 max-w-xl mx-auto mb-8 leading-relaxed">
+              Baik untuk koleksi pribadi, gaun custom, kebaya, seragam
+              instansi, maupun kebutuhan konveksi skala besar — tim Kaski
+              Atelier siap membantu dari konsultasi hingga produksi.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href={WA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold px-8 py-3.5 rounded-full transition-colors shadow-lg"
+              >
+                <WhatsAppIcon className="w-5 h-5" />
+                Konsultasi Gratis Sekarang
+              </a>
+              <a
+                href={IG_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 border border-amber-200/40 hover:border-amber-200 text-amber-50 font-semibold px-8 py-3.5 rounded-full transition-colors"
+              >
+                <InstagramIcon className="w-5 h-5" />
+                @kaski.atelier
+              </a>
             </div>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-inner">
-          <div>
-            <div className="footer-logo">Kaski Atelier</div>
-            <div className="footer-tagline">Warna Etnik · Gaya Otentik · Depok, 2018</div>
+      <footer className="bg-stone-950 text-stone-400 py-12">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="text-center md:text-left">
+            <p className="font-serif italic text-xl text-amber-100">
+              Kaski Atelier
+            </p>
+            <p className="text-xs text-stone-500 mt-1">
+              Warna Etnik, Gaya Otentik — Depok, Jawa Barat
+            </p>
           </div>
-          <div className="footer-links">
-            <a href={IG_LINK} target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            <a href="#tentang">Tentang</a>
-            <a href="#layanan">Layanan</a>
-            <a href="#event">Event</a>
+
+          <div className="flex items-center gap-5">
+            <a
+              href={IG_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram Kaski Atelier"
+              className="hover:text-amber-300 transition-colors"
+            >
+              <InstagramIcon className="w-5 h-5" />
+            </a>
+            <a
+              href={WA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp Kaski Atelier"
+              className="hover:text-amber-300 transition-colors"
+            >
+              <WhatsAppIcon className="w-5 h-5" />
+            </a>
           </div>
-          <div style={{ fontSize: "0.7rem", opacity: 0.45 }}>
-            © 2025 Kaski Atelier by Latifah. All rights reserved.
-          </div>
+
+          <p className="text-xs text-stone-600">
+            © {new Date().getFullYear()} Kaski Atelier. All rights reserved.
+          </p>
         </div>
       </footer>
-    </>
+    </main>
   );
 }
